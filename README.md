@@ -1,6 +1,6 @@
-# Job Application Tracker
+# MatchDay — Soccer Pick'em Prediction League
 
-A full-stack Job Application Tracker built with React, Express, and PostgreSQL. Users can create an account, log in, and manage their job applications in one place. The app demonstrates session-based authentication, protected API routes, CRUD operations, and full-stack state management.
+A full-stack Soccer Prediction League built with React, Express, and PostgreSQL. Users can create accounts, join private leagues, and predict soccer match outcomes each week. The app demonstrates session-based authentication, protected API routes, CRUD operations, and external API integration using real-world soccer data.
 
 ---
 
@@ -15,26 +15,75 @@ A full-stack Job Application Tracker built with React, Express, and PostgreSQL. 
 
 ---
 
-## Job Applications
+## Leagues & Predictions
 
 A logged-in user can:
 
-- View all of their job applications
-- Add a new job application
-- Edit an existing application
-- Delete an application
-- Update the application status
-- Add notes about interviews or follow-ups
+- Create a new league
+- Join a league using an invite code
+- View upcoming soccer fixtures
+- Submit match predictions before kickoff
+- View past predictions and results
+- See a leaderboard of all league members
 
 ---
 
-# Application Statuses
+# Match Rules
 
-- Applied
-- Interview
-- Final Round
-- Offer
-- Rejected
+- Users predict match outcomes (Win / Draw / Loss or score prediction)
+- Predictions lock before kickoff time
+- Points are awarded after match results are confirmed
+- Leaderboard updates based on total points
+
+---
+
+# Important Design Notes
+
+## Authentication Strategy
+
+- This project uses **session-based authentication (express-session + bcrypt)**
+
+---
+
+## Prediction Constraints
+
+To ensure data consistency:
+
+- A user can only submit **one prediction per fixture per league**
+- Enforced with a database constraint:
+
+```sql
+UNIQUE(user_id, fixture_id, league_id)
+```
+
+---
+
+## Fixtures Integration (External API)
+
+- Fixtures are pulled from API-Football
+- To avoid duplicate data, each fixture must store the external API ID:
+
+```sql
+api_fixture_id INTEGER UNIQUE
+```
+
+This ensures we do not re-insert the same match on every sync.
+
+---
+
+## Scoring System (To Define Early)
+
+Scoring logic must be decided before implementing the backend job:
+
+Example options:
+- Correct outcome (Win/Draw/Loss): 1 point
+- Exact score: 3 points bonus
+- Streak bonus: optional
+
+This will directly affect:
+- prediction updates
+- leaderboard calculations
+- cron job logic
 
 ---
 
@@ -50,21 +99,63 @@ username      TEXT UNIQUE NOT NULL
 password_hash TEXT NOT NULL
 ```
 
-## applications
+---
+
+## leagues
 
 ```sql
-applications
+leagues
 ─────────────────────────────
-application_id SERIAL PRIMARY KEY
-company_name   TEXT NOT NULL
-position_title TEXT NOT NULL
-status         TEXT DEFAULT 'Applied'
-notes          TEXT
-date_applied   DATE
-user_id        INTEGER REFERENCES users(user_id) ON DELETE CASCADE
+league_id     SERIAL PRIMARY KEY
+name          TEXT NOT NULL
+invite_code   TEXT UNIQUE NOT NULL
+created_by    INTEGER REFERENCES users(user_id)
 ```
 
-A user has many job applications. Deleting a user deletes all of their applications.
+---
+
+## league_members
+
+```sql
+league_members
+─────────────────────────────
+id            SERIAL PRIMARY KEY
+user_id       INTEGER REFERENCES users(user_id) ON DELETE CASCADE
+league_id     INTEGER REFERENCES leagues(league_id) ON DELETE CASCADE
+```
+
+---
+
+## fixtures
+
+```sql
+fixtures
+─────────────────────────────
+fixture_id       SERIAL PRIMARY KEY
+api_fixture_id   INTEGER UNIQUE
+home_team        TEXT NOT NULL
+away_team        TEXT NOT NULL
+match_date       TIMESTAMP
+status           TEXT
+home_score       INTEGER
+away_score       INTEGER
+```
+
+---
+
+## predictions
+
+```sql
+predictions
+─────────────────────────────
+prediction_id  SERIAL PRIMARY KEY
+user_id        INTEGER REFERENCES users(user_id)
+fixture_id     INTEGER REFERENCES fixtures(fixture_id)
+league_id      INTEGER REFERENCES leagues(league_id)
+prediction     TEXT
+points         INTEGER DEFAULT 0
+created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+```
 
 ---
 
@@ -81,28 +172,52 @@ A user has many job applications. Deleting a user deletes all of their applicati
 
 ---
 
-## Application Endpoints
-
-(All routes require authentication)
+## League Endpoints
 
 | Method | Endpoint | Request Body | Response |
 |---|---|---|---|
-| GET | /api/applications | — | `[{ application }]` |
-| POST | /api/applications | `{ company_name, position_title, status, notes }` | `{ application }` |
-| PATCH | /api/applications/:application_id | `{ status, notes }` | `{ updated application }` |
-| DELETE | /api/applications/:application_id | — | `{ deleted application }` |
+| POST | /api/leagues | `{ name }` | `{ league }` |
+| POST | /api/leagues/join | `{ invite_code }` | `{ league }` |
+| GET | /api/leagues | — | `[{ leagues }]` |
+
+---
+
+## Fixtures Endpoints
+
+| Method | Endpoint | Request Body | Response |
+|---|---|---|---|
+| GET | /api/fixtures | — | `[{ fixture }]` |
+
+---
+
+## Predictions Endpoints
+
+| Method | Endpoint | Request Body | Response |
+|---|---|---|---|
+| POST | /api/predictions | `{ fixture_id, prediction }` | `{ prediction }` |
+| GET | /api/predictions | — | `[{ prediction }]` |
+| PATCH | /api/predictions/:id | `{ prediction }` | `{ updated prediction }` |
+
+---
+
+## Leaderboard
+
+| Method | Endpoint | Request Body | Response |
+|---|---|---|---|
+| GET | /api/leaderboard/:league_id | — | `[{ user, points }]` |
 
 ---
 
 # Features
 
-- Session-based authentication
+- Session-based authentication (express-session + bcrypt)
 - Protected API routes
-- Persistent login sessions
-- CRUD operations
-- Status tracking
-- Responsive UI
-- Dashboard organization
+- League system with invite codes
+- Match prediction system
+- Deadline-based prediction locking
+- Points-based leaderboard system
+- External soccer API integration (API-Football)
+- Responsive dashboard UI
 
 ---
 
@@ -124,6 +239,9 @@ A user has many job applications. Deleting a user deletes all of their applicati
 - Express Session
 - Bcrypt
 
+## External API
+- API-Football (fixtures + results)
+
 ---
 
 # Setup Instructions
@@ -132,17 +250,15 @@ A user has many job applications. Deleting a user deletes all of their applicati
 
 ```bash
 git clone <your-repo-url>
-cd job-application-tracker
+cd matchday
 ```
 
 ---
 
 ## 2. Database Setup
 
-Create a PostgreSQL database:
-
 ```bash
-createdb job_tracker
+createdb matchday
 ```
 
 ---
@@ -155,36 +271,29 @@ npm install
 cp .env.template .env
 ```
 
-Open `.env` and add:
+Add:
 
 ```env
 DATABASE_URL=your_database_url
 SESSION_SECRET=your_secret_key
+API_FOOTBALL_KEY=your_api_key
 ```
 
-Seed the database:
+Seed database:
 
 ```bash
 npm run db:seed
 ```
 
-Start the server:
+Start server:
 
 ```bash
 npm run dev
 ```
 
-Server runs on:
-
-```txt
-http://localhost:8080
-```
-
 ---
 
 ## 4. Frontend Setup
-
-Open another terminal:
 
 ```bash
 cd frontend
@@ -192,40 +301,41 @@ npm install
 npm run dev
 ```
 
-Frontend runs on:
-
-```txt
-http://localhost:5173
-```
-
 ---
 
 # Application Structure
 
 ```txt
-job-application-tracker/
+matchday/
 ├── frontend/
 │   ├── src/
 │   │   ├── App.jsx
 │   │   ├── adapters/
 │   │   │   ├── auth-adapters.js
-│   │   │   └── application-adapters.js
+│   │   │   ├── league-adapters.js
+│   │   │   ├── fixture-adapters.js
+│   │   │   └── prediction-adapters.js
 │   │   └── components/
 │   │       ├── AuthPage.jsx
 │   │       ├── Dashboard.jsx
-│   │       ├── AddApplicationForm.jsx
-│   │       ├── ApplicationList.jsx
-│   │       └── ApplicationCard.jsx
+│   │       ├── FixturesPage.jsx
+│   │       ├── LeaguePage.jsx
+│   │       ├── PredictionForm.jsx
+│   │       └── Leaderboard.jsx
 │   └── vite.config.js
 │
 └── server/
     ├── index.js
     ├── controllers/
     │   ├── authControllers.js
-    │   └── applicationControllers.js
+    │   ├── leagueControllers.js
+    │   ├── fixtureControllers.js
+    │   └── predictionControllers.js
     ├── models/
     │   ├── userModel.js
-    │   └── applicationModel.js
+    │   ├── leagueModel.js
+    │   ├── fixtureModel.js
+    │   └── predictionModel.js
     ├── middleware/
     │   ├── checkAuthentication.js
     │   └── logRoutes.js
@@ -233,6 +343,3 @@ job-application-tracker/
         ├── pool.js
         └── seed.js
 ```
-
----
-
