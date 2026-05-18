@@ -16,30 +16,36 @@ const handleFetch = async (url, options = {}) => {
 // in MatchDay this would become:
 // fetch all predictions OR fixtures for the logged-in user
 
-export const fetchAllTodos = async () => {
-  return handleFetch("/api/todos");
+export const fetchAllPredictions = async () => {
+  return handleFetch("/api/predictions");
 };
 
 // in MatchDay this becomes submitting a match prediction
 // example payload:
 // { fixture_id, prediction: "Arsenal Win" }
-export const createTodo = async (title) => {
-  return handleFetch("/api/todos", {
+export const createPrediction = async ({prediction,
+  fixture_id,
+  league_id,}) => {
+  return handleFetch("/api/predictions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
       // in MatchDay this would NOT just be "title"
     // it would include:
     // - fixture_id
     // - prediction (W/D/L or score guess)
-    body: JSON.stringify({ title }),
+    body: JSON.stringify({
+      prediction,
+      fixture_id,
+      league_id,
+    }),
   });
 };
 
 // updates a todo (now: update application status / notes)
 // in MatchDay this would update a prediction
 // (example: change prediction OR update points after scoring)
-export const updateTodo = async (todo_id, updates) => {
-  return handleFetch(`/api/todos/${todo_id}`, {
+export const updatePrediction = async (prediction_id, updates) => {
+  return handleFetch(`/api/predictions/${prediction_id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updates),
@@ -48,6 +54,6 @@ export const updateTodo = async (todo_id, updates) => {
 
 // deletes a todo (now: delete a job application)
 // in MatchDay this deletes a prediction entry
-export const deleteTodo = async (todo_id) => {
-  return handleFetch(`/api/todos/${todo_id}`, { method: "DELETE" });
+export const deletePrediction = async (prediction_id) => {
+  return handleFetch(`/api/predictions/${prediction_id}`, { method: "DELETE" });
 };

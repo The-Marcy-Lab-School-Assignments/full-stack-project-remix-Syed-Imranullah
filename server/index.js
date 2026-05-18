@@ -6,7 +6,8 @@ require('dotenv').config();
 const logRoutes = require('./middleware/logRoutes');
 const checkAuthentication = require('./middleware/checkAuthentication');
 const authControllers = require('./controllers/authControllers');
-const todoControllers = require('./controllers/todoControllers');
+const predictionControllers = require('./controllers/predictionControllers');
+const fixtureControllers = require("./controllers/fixtureControllers");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -37,10 +38,12 @@ app.delete('/api/auth/logout', authControllers.logout);
 // Todo routes (all require authentication)
 // ====================================
 
-app.get('/api/todos', checkAuthentication, todoControllers.listTodos);
-app.post('/api/todos', checkAuthentication, todoControllers.createTodo);
-app.patch('/api/todos/:todo_id', checkAuthentication, todoControllers.updateTodo);
-app.delete('/api/todos/:todo_id', checkAuthentication, todoControllers.deleteTodo);
+app.get('/api/predictions', checkAuthentication, predictionControllers.listPredictions);
+app.post('/api/predictions', checkAuthentication, predictionControllers.createPrediction);
+app.patch('/api/predictions/:prediction_id', checkAuthentication, predictionControllers.updatePrediction);
+app.delete('/api/predictions/:prediction_id', checkAuthentication, predictionControllers.deletePrediction);
+app.get("/api/fixtures", fixtureControllers.listFixtures);
+app.get("/api/fixtures/:fixture_id", fixtureControllers.getFixture);
 
 // ====================================
 // Global Error Handler

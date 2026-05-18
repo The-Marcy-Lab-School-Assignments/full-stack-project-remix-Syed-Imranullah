@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { fetchAllTodos } from "../adapters/todo-adapters";
-import AddTodoForm from "./AddTodoForm";
-import TodoList from "./TodoList";
+import { fetchAllPredictions } from "../adapters/prediction-adapters";
+import PredictionForm from "./PredictionForm";
+import PredictionList from "./PredictionList";
 
-function TodoPage({ currentUser, handleLogout }) {
-  const [todos, setTodos] = useState([]);
+function ApplicationPage({ currentUser, handleLogout }) {
+  const [predictions, setPredictions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -16,14 +16,14 @@ function TodoPage({ currentUser, handleLogout }) {
   // main data fetching function
   // in MatchDay this would be "loadFixtures / loadPredictions / loadApplications"
   // depending on what page is being built
-  const loadTodos = async () => {
+  const loadPredictions = async () => {
     setIsLoading(true);
     setError(null);
-    const { data, error: fetchError } = await fetchAllTodos();
+    const { data, error: fetchError } = await fetchAllPredictions();
     if (fetchError) {
       setError(fetchError.message);
     } else {
-      setTodos(data);
+      setPredictions(data);
     }
     setIsLoading(false);
   };
@@ -31,7 +31,7 @@ function TodoPage({ currentUser, handleLogout }) {
   // in MatchDay this also helps "session rehydration style behavior"
 
   useEffect(() => {
-    loadTodos();
+    loadPredictions();
   }, []);
 
   return (
@@ -49,16 +49,19 @@ function TodoPage({ currentUser, handleLogout }) {
           - prediction (win/draw/loss)
           - optional score guess */}
 
-      <AddTodoForm loadTodos={loadTodos} />
-      {isLoading && <p>Loading todos...</p>}
+      <PredictionForm loadPredictions={loadPredictions} />
+      {isLoading && <p>Loading predictions...</p>}
       {error && <p className="error">Something went wrong: {error}</p>}
 
        {/* in MatchDay this becomes PredictionList or ApplicationList
           it renders structured match predictions instead of simple todos */}
 
-      <TodoList todos={todos} loadTodos={loadTodos} />
+       <PredictionList
+        predictions={predictions}
+        loadPredictions={loadPredictions}
+      />
     </section>
   );
 }
 
-export default TodoPage;
+export default ApplicationPage;
