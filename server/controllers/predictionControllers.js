@@ -2,13 +2,8 @@ const predictionModel = require("../models/predictionModel");
 
 module.exports.listPredictions = async (req, res, next) => {
   try {
-    const league_id = req.query.league_id;
-
-    const predictions = await predictionModel.listByUser(
-      req.session.user_id,
-      league_id,
-    );
-
+    const { league_id } = req.query;
+    const predictions = await predictionModel.listByUser(req.session.user_id, league_id);
     res.send(predictions);
   } catch (err) {
     next(err);

@@ -41,3 +41,28 @@ module.exports.validatePassword = async (username, password) => {
   if (!isValid) return null;
   return { user_id: user.user_id, username: user.username };
 };
+module.exports.updateUsername = async (user_id, username) => {
+  const query = `
+    UPDATE users SET username = $1
+    WHERE user_id = $2
+    RETURNING user_id, username
+  `;
+  const { rows } = await pool.query(query, [username, user_id]);
+  return rows[0];
+};
+
+module.exports.updatePassword = async (user_id, newHash) => {
+  const query = `
+    UPDATE users SET password_hash = $1
+    WHERE user_id = $2
+    RETURNING user_id, username
+  `;
+  const { rows } = await pool.query(query, [newHash, user_id]);
+  return rows[0];
+};
+
+module.exports.destroy = async (user_id) => {
+  const query = `DELETE FROM users WHERE user_id = $1 RETURNING *`;
+  const { rows } = await pool.query(query, [user_id]);
+  return rows[0];
+};

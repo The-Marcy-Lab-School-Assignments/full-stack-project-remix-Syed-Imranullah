@@ -25,7 +25,7 @@ function Leaderboard({ activeLeague }) {
 
   return (
   <section>
-      <h2 className="page-title"> {activeLeague.league_name} — Leaderboard</h2>
+      <h2 className="page-title"> {activeLeague.league_name}</h2>
 
     <div className="leaderboard-wrap">
 

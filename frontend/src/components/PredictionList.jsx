@@ -4,7 +4,7 @@ import PredictionItem from "./PredictionItem";
 // it renders all predictions or fixtures for the user
 function PredictionList({ predictions, loadPredictions }) {
   if (!predictions || !predictions.length) {
-    return <p>No predictions yet. Head to Fixtures to make your first one.</p>;
+    return null;
   }
   return (
     <ul id="prediction-list">

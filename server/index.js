@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const cookieSession = require('cookie-session');
+require("./jobs/autoScore");
 require('dotenv').config();
 
 const logRoutes = require('./middleware/logRoutes');
@@ -53,6 +54,9 @@ app.post("/api/leagues/join", checkAuthentication, leagueControllers.joinLeague)
 app.delete("/api/leagues/:league_id", checkAuthentication, leagueControllers.deleteLeague);
 app.get("/api/leaderboard/:league_id", checkAuthentication, leagueControllers.getLeaderboard);
 
+app.patch('/api/auth/username', checkAuthentication, authControllers.updateUsername);
+app.patch('/api/auth/password', checkAuthentication, authControllers.updatePassword);
+app.delete('/api/auth/account', checkAuthentication, authControllers.deleteAccount);
 
 
 // ====================================

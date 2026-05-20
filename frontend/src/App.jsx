@@ -5,6 +5,8 @@ import ApplicationPage from "./components/ApplicationPage";
 import FixturesPage from "./components/FixturesPage";
 import LeaguePage from "./components/LeaguePage";
 import Leaderboard from "./components/Leaderboard";
+import SettingsPage from "./components/SettingsPage";
+
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -87,9 +89,9 @@ function App() {
 </div>
     )}
 
-    <button className="logout-btn" onClick={handleLogout}>
-      Logout
-    </button>
+    <button className="settings-icon-btn" onClick={() => setPage("settings")}>
+  ⚙️
+</button>
   </div>
 </div>
 
@@ -129,6 +131,14 @@ function App() {
         />
       )}
       {page === "leaderboard" && <Leaderboard activeLeague={activeLeague} />}
+      
+      {page === "settings" && (
+  <SettingsPage
+    currentUser={currentUser}
+    setCurrentUser={setCurrentUser}
+    handleLogout={handleLogout}
+  />
+)}
     </main>
   );
 }

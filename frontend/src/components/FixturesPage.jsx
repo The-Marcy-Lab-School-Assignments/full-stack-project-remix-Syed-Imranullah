@@ -58,12 +58,25 @@ function FixturesPage({ currentUser, handleLogout, activeLeague }) {
             <div>
               <div className="fixture-teams">
                 {fixture.home_team}
-                <span className="vs-badge">VS</span>
+
+                <span className="vs-badge">
+                  {fixture.status === "finished"
+                    ? `${fixture.home_score ?? 0} - ${fixture.away_score ?? 0}`
+                    : "VS"}
+                </span>
+
                 {fixture.away_team}
               </div>
-              <div className="fixture-date">
-                {new Date(fixture.match_date).toLocaleString()}
-              </div>
+
+              {fixture.status === "finished" && (
+                <span className="fixture-status finished">Full Time</span>
+              )}
+
+              {fixture.status === "upcoming" && (
+                <span className="fixture-status upcoming">
+                  {new Date(fixture.match_date).toLocaleString()}
+                </span>
+              )}
             </div>
             <button
               className="predict-btn"

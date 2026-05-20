@@ -2,15 +2,24 @@ const pool = require("../db/pool");
 
 // create a league
 module.exports.create = async (league_name, invite_code, user_id) => {
-  const query = `
-    INSERT INTO leagues (league_name, invite_code, created_by)
-    VALUES ($1, $2, $3)
-    RETURNING *
-  `;
+  const { rows } = await pool.query(
+    `INSERT INTO leagues (league_name, invite_code, created_by)
+     VALUES ($1, $2, $3)
+     RETURNING *`,
+    [league_name, invite_code, user_id]
+  );
 
-  const { rows } = await pool.query(query, [league_name, invite_code, user_id]);
+  const league = rows[0];
 
-  return rows[0];
+  // Auto-join creator so league shows up immediately
+  await pool.query(
+    `INSERT INTO league_members (user_id, league_id)
+     VALUES ($1, $2)
+     ON CONFLICT DO NOTHING`,
+    [user_id, league.league_id]
+  );
+
+  return league;
 };
 
 // join league
@@ -35,13 +44,12 @@ module.exports.findByInviteCode = async (invite_code) => {
 // get user leagues
 module.exports.getUserLeagues = async (user_id) => {
   const query = `
-    SELECT leagues.*
+    SELECT DISTINCT leagues.*
     FROM leagues
     JOIN league_members
       ON leagues.league_id = league_members.league_id
     WHERE league_members.user_id = $1
   `;
-
   const { rows } = await pool.query(query, [user_id]);
   return rows;
 };

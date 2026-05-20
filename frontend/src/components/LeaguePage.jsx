@@ -6,7 +6,6 @@ import {
   deleteLeague,
 } from "../adapters/league-adapters";
 
-
 function LeaguePage({
   currentUser,
   handleLogout,
@@ -66,11 +65,38 @@ function LeaguePage({
           <li
             key={l.league_id}
             className={`league-card ${activeLeague?.league_id === l.league_id ? "active-league" : ""}`}
-            onClick={() => handleSelectLeague(l)}
+            onClick={() => setActiveLeague(l)}
           >
             <div>
               <div className="league-name">{l.league_name}</div>
-              <div className="league-code">Code: {l.invite_code}</div>
+              <div className="league-code">
+                Invite Code:{" "}
+                <span
+                  style={{
+                    color: "#4ade80",
+                    fontWeight: "700",
+                    letterSpacing: "2px",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  {l.invite_code}
+                </span>
+                {l.created_by === currentUser.user_id && (
+                  <span
+                    style={{
+                      marginLeft: "0.5rem",
+                      background: "#14532d",
+                      color: "#4ade80",
+                      fontSize: "0.68rem",
+                      padding: "0.15rem 0.5rem",
+                      borderRadius: "20px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Owner
+                  </span>
+                )}
+              </div>
             </div>
             {l.created_by === currentUser.user_id && (
               <button

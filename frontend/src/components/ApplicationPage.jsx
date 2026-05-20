@@ -16,22 +16,20 @@ function ApplicationPage({ currentUser, handleLogout, activeLeague }) {
   // main data fetching function
   // in MatchDay this would be "loadFixtures / loadPredictions / loadApplications"
   // depending on what page is being built
-  const loadPredictions = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    const { data, error: fetchError } = await fetchAllPredictions();
-
-    if (fetchError) setError(fetchError.message);
-    else setPredictions(data);
-    setIsLoading(false);
-  };
+ const loadPredictions = async () => {
+  setIsLoading(true);
+  setError(null);
+  const { data, error: fetchError } = await fetchAllPredictions(activeLeague?.league_id);
+  if (fetchError) setError(fetchError.message);
+  else setPredictions(data);
+  setIsLoading(false);
+};
   // runs once when page loads
   // in MatchDay this also helps "session rehydration style behavior"
 
   useEffect(() => {
     loadPredictions();
-  }, []);
+  }, [activeLeague]);
   if (!activeLeague) {
     return <p>Select a league first to view your predictions.</p>;
   }
@@ -39,7 +37,7 @@ function ApplicationPage({ currentUser, handleLogout, activeLeague }) {
   return (
     <section>
       <h2 className="page-title">
-        My Predictions — {activeLeague.league_name}
+        {activeLeague.league_name}
       </h2>
       {isLoading && <p>Loading predictions...</p>}
       {error && <p className="error">Something went wrong: {error}</p>}

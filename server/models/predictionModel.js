@@ -2,7 +2,7 @@ const pool = require("../db/pool");
 
 // Returns all todos for a specific user, ordered by creation time
 // in MatchDay this would return all predictions for a user inside a league
-module.exports.listByUser = async (user_id) => {
+module.exports.listByUser = async (user_id, league_id) => {
   const query = `
     SELECT 
       predictions.*,
@@ -13,9 +13,10 @@ module.exports.listByUser = async (user_id) => {
     FROM predictions
     JOIN fixtures ON predictions.fixture_id = fixtures.fixture_id
     WHERE predictions.user_id = $1
+    AND predictions.league_id = $2
     ORDER BY predictions.prediction_id ASC
   `;
-  const { rows } = await pool.query(query, [user_id]);
+  const { rows } = await pool.query(query, [user_id, league_id]);
   return rows;
 };
 
