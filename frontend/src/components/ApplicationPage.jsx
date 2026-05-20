@@ -3,7 +3,7 @@ import { fetchAllPredictions } from "../adapters/prediction-adapters";
 import PredictionForm from "./PredictionForm";
 import PredictionList from "./PredictionList";
 
-function ApplicationPage({ currentUser, handleLogout }) {
+function ApplicationPage({ currentUser, handleLogout, activeLeague }) {
   const [predictions, setPredictions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,12 +19,11 @@ function ApplicationPage({ currentUser, handleLogout }) {
   const loadPredictions = async () => {
     setIsLoading(true);
     setError(null);
+
     const { data, error: fetchError } = await fetchAllPredictions();
-    if (fetchError) {
-      setError(fetchError.message);
-    } else {
-      setPredictions(data);
-    }
+
+    if (fetchError) setError(fetchError.message);
+    else setPredictions(data);
     setIsLoading(false);
   };
   // runs once when page loads
@@ -33,30 +32,21 @@ function ApplicationPage({ currentUser, handleLogout }) {
   useEffect(() => {
     loadPredictions();
   }, []);
+  if (!activeLeague) {
+    return <p>Select a league first to view your predictions.</p>;
+  }
 
   return (
     <section>
-      <div id="user-controls">
-        <span>
-          Welcome, <strong>{currentUser.username}</strong>!
-        </span>
-        <button onClick={handleLogout}>Log Out</button>
-      </div>
-
-       {/* in MatchDay this becomes AddPredictionForm or AddApplicationForm
-          instead of just entering a todo title, user would submit:
-          - fixture (match)
-          - prediction (win/draw/loss)
-          - optional score guess */}
-
-      <PredictionForm loadPredictions={loadPredictions} />
+      <h2 className="page-title">
+        My Predictions — {activeLeague.league_name}
+      </h2>
       {isLoading && <p>Loading predictions...</p>}
       {error && <p className="error">Something went wrong: {error}</p>}
-
-       {/* in MatchDay this becomes PredictionList or ApplicationList
-          it renders structured match predictions instead of simple todos */}
-
-       <PredictionList
+      {!isLoading && !predictions.length && (
+        <p>No predictions yet. Head to Fixtures to make your first one.</p>
+      )}
+      <PredictionList
         predictions={predictions}
         loadPredictions={loadPredictions}
       />

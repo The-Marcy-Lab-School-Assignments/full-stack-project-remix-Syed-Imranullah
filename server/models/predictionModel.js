@@ -4,12 +4,17 @@ const pool = require("../db/pool");
 // in MatchDay this would return all predictions for a user inside a league
 module.exports.listByUser = async (user_id) => {
   const query = `
-    SELECT *
+    SELECT 
+      predictions.*,
+      fixtures.home_team,
+      fixtures.away_team,
+      fixtures.match_date,
+      fixtures.status
     FROM predictions
-    WHERE user_id = $1
-    ORDER BY prediction_id ASC
+    JOIN fixtures ON predictions.fixture_id = fixtures.fixture_id
+    WHERE predictions.user_id = $1
+    ORDER BY predictions.prediction_id ASC
   `;
-
   const { rows } = await pool.query(query, [user_id]);
   return rows;
 };
@@ -19,9 +24,14 @@ module.exports.listByUser = async (user_id) => {
 
 module.exports.find = async (prediction_id) => {
   const query = `
-    SELECT *
+    SELECT 
+      predictions.*,
+      fixtures.home_team,
+      fixtures.away_team
     FROM predictions
-    WHERE prediction_id = $1
+    JOIN fixtures
+      ON predictions.fixture_id = fixtures.fixture_id
+    WHERE predictions.prediction_id = $1
   `;
   const { rows } = await pool.query(query, [prediction_id]);
   return rows[0] || null;

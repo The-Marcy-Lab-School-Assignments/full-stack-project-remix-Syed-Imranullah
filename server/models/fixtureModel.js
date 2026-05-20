@@ -5,7 +5,9 @@ module.exports.getAll = async () => {
   const { rows } = await pool.query(`
     SELECT *
     FROM fixtures
+    WHERE match_date >= NOW() 
     ORDER BY match_date ASC
+    LIMIT 50
   `);
   return rows;
 };

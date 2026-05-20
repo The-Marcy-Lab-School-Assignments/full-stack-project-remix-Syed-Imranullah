@@ -2,7 +2,13 @@ const predictionModel = require("../models/predictionModel");
 
 module.exports.listPredictions = async (req, res, next) => {
   try {
-    const predictions = await predictionModel.listByUser(req.session.user_id);
+    const league_id = req.query.league_id;
+
+    const predictions = await predictionModel.listByUser(
+      req.session.user_id,
+      league_id,
+    );
+
     res.send(predictions);
   } catch (err) {
     next(err);
@@ -12,7 +18,8 @@ module.exports.listPredictions = async (req, res, next) => {
 module.exports.createPrediction = async (req, res, next) => {
   try {
     const { prediction, fixture_id, league_id } = req.body;
-    if (!prediction || !fixture_id || !league_id) return res.status(400).send({ error: "Missing required fields." });
+    if (!prediction || !fixture_id || !league_id)
+      return res.status(400).send({ error: "Missing required fields." });
     const newPrediction = await predictionModel.create(
       prediction,
       req.session.user_id,
@@ -29,11 +36,15 @@ module.exports.updatePrediction = async (req, res, next) => {
   try {
     const { prediction_id } = req.params;
     const existing = await predictionModel.find(prediction_id);
-    if (!existing) return res.status(404).send({ error: "Prediction not found."  });
+    if (!existing)
+      return res.status(404).send({ error: "Prediction not found." });
     if (existing.user_id !== req.session.user_id) {
       return res.status(403).send({ error: "Not authorized." });
     }
-    const updatedPrediction = await predictionModel.update(prediction_id, req.body);
+    const updatedPrediction = await predictionModel.update(
+      prediction_id,
+      req.body.prediction,
+    );
     res.send(updatedPrediction);
   } catch (err) {
     next(err);
@@ -46,7 +57,8 @@ module.exports.deletePrediction = async (req, res, next) => {
 
     // First find the todo to verify ownership
     const existing = await predictionModel.find(prediction_id);
-    if (!existing) return res.status(404).send({ error: "Prediction not found." });
+    if (!existing)
+      return res.status(404).send({ error: "Prediction not found." });
     if (existing.user_id !== req.session.user_id) {
       return res.status(403).send({ error: "Not authorized." });
     }

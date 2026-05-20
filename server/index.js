@@ -8,6 +8,7 @@ const checkAuthentication = require('./middleware/checkAuthentication');
 const authControllers = require('./controllers/authControllers');
 const predictionControllers = require('./controllers/predictionControllers');
 const fixtureControllers = require("./controllers/fixtureControllers");
+const leagueControllers = require("./controllers/leagueControllers");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -44,6 +45,15 @@ app.patch('/api/predictions/:prediction_id', checkAuthentication, predictionCont
 app.delete('/api/predictions/:prediction_id', checkAuthentication, predictionControllers.deletePrediction);
 app.get("/api/fixtures", fixtureControllers.listFixtures);
 app.get("/api/fixtures/:fixture_id", fixtureControllers.getFixture);
+
+// LEAGUES
+app.get("/api/leagues", checkAuthentication, leagueControllers.getLeagues);
+app.post("/api/leagues", checkAuthentication, leagueControllers.createLeague);
+app.post("/api/leagues/join", checkAuthentication, leagueControllers.joinLeague);
+app.delete("/api/leagues/:league_id", checkAuthentication, leagueControllers.deleteLeague);
+app.get("/api/leaderboard/:league_id", checkAuthentication, leagueControllers.getLeaderboard);
+
+
 
 // ====================================
 // Global Error Handler

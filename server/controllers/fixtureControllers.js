@@ -3,7 +3,22 @@ const fixtureModel = require("../models/fixtureModel");
 // GET /api/fixtures
 module.exports.listFixtures = async (req, res, next) => {
   try {
-    const fixtures = await fixtureModel.getAll();
+    const { type } = req.query;
+
+    let fixtures = await fixtureModel.getAll();
+
+    if (type === "upcoming") {
+      fixtures = fixtures.filter((f) => f.status === "upcoming");
+    }
+
+    if (type === "live") {
+      fixtures = fixtures.filter((f) => f.status === "live");
+    }
+
+    if (type === "results") {
+      fixtures = fixtures.filter((f) => f.status === "finished");
+    }
+
     res.send(fixtures);
   } catch (err) {
     next(err);

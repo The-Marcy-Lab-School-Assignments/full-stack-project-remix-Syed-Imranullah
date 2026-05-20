@@ -5,7 +5,10 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "db:seed": "node db/seed.js"
+    "db:seed": "node db/seed.js",
+      "db:sync": "node db/syncFixtures.js",
+      "score": "node db/scorePredictions.js"
+
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

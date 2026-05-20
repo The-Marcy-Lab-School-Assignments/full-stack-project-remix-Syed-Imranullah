@@ -6,180 +6,704 @@
 
 body {
   font-family: system-ui, sans-serif;
-  background: #f5f5f5;
-  color: #1a1a1a;
+  background: #0a1628;
+  color: #f0f4f8;
+  min-height: 100vh;
 }
+
+/* ====================================
+   LAYOUT
+==================================== */
 
 main {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
 }
 
-h1 {
-  font-size: 1.75rem;
-  margin-bottom: 1.5rem;
-  color: #1d4ed8;
-}
+/* ====================================
+   HEADER
+==================================== */
 
-/* Auth forms */
-#auth-section {
-  display: flex;
-  gap: 1.5rem;
-}
-
-form {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  flex: 1;
-}
-
-form h2 {
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  color: #374151;
-}
-
-form input {
-  display: block;
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 0.95rem;
-}
-
-form button[type='submit'] {
-  background: #1d4ed8;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.95rem;
-}
-
-.error {
-  color: #dc2626;
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Logged-in view */
-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-#user-controls {
+.app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: white;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  padding: 1.25rem 0 1rem;
+  border-bottom: 1px solid #1e3a5f;
+  margin-bottom: 1.5rem;
 }
 
-#user-controls button {
-  background: #dc2626;
-  color: white;
+.app-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #4ade80;
+  letter-spacing: -0.5px;
+}
+
+.active-league-badge {
+  background: #14532d;
+  color: #4ade80;
+  border: 1px solid #166534;
+  padding: 0.3rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ====================================
+   NAV
+==================================== */
+
+nav {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 2rem;
+  background: #0f2040;
+  border-radius: 10px;
+  padding: 0.4rem;
+  flex-wrap: wrap;
+}
+
+nav button {
+  flex: 1;
+  background: transparent;
   border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+  color: #94a3b8;
+  padding: 0.55rem 0.75rem;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+nav button:hover {
+  background: #1e3a5f;
+  color: #fff;
+}
+
+nav button.active {
+  background: #1e3a5f;
+  color: #4ade80;
+}
+
+/* ====================================
+   BUTTONS
+==================================== */
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid #374151;
+  color: #94a3b8;
+  padding: 0.35rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+
+.logout-btn:hover {
+  border-color: #e24b4a;
+  color: #e24b4a;
+}
+
+.predict-btn {
+  background: #166534;
+  color: #4ade80;
+  border: 1px solid #166534;
+  padding: 0.45rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.predict-btn:hover {
+  background: #14532d;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 0.75rem;
+  background: #4ade80;
+  color: #0a1628;
+  border: none;
+  padding: 0.65rem;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
+  font-weight: 700;
+  transition: opacity 0.15s;
 }
 
-/* Add todo form */
-#add-todo-form {
+.submit-btn:hover {
+  opacity: 0.9;
+}
+
+.delete-btn {
+  background: transparent;
+  border: 1px solid #374151;
+  color: #64748b;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: all 0.15s;
+}
+
+.delete-btn:hover {
+  border-color: #e24b4a;
+  color: #e24b4a;
+}
+
+.create-btn {
+  width: 100%;
+  background: #166534;
+  color: #4ade80;
+  border: 1px solid #166534;
+  padding: 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+
+.create-btn:hover {
+  background: #14532d;
+}
+
+/* ====================================
+   PAGE TITLES
+==================================== */
+
+.page-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #f0f4f8;
+  margin-bottom: 1.25rem;
+}
+
+.section-title {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+/* ====================================
+   FIXTURES
+==================================== */
+
+#fixture-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.fixture-card {
+  background: #0f2040;
+  border: 1px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: border-color 0.15s;
+}
+
+.fixture-card:hover {
+  border-color: #2d5a8e;
+}
+
+.fixture-teams {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f0f4f8;
+}
+
+.vs-badge {
+  background: #1e3a5f;
+  color: #94a3b8;
+  font-size: 0.68rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.fixture-date {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 0.3rem;
+}
+
+/* fixture status badge — ready for API statuses */
+.fixture-status {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.fixture-status.upcoming {
+  background: #1e3a5f;
+  color: #94a3b8;
+}
+
+.fixture-status.live {
+  background: #14532d;
+  color: #4ade80;
+}
+
+.fixture-status.finished {
+  background: #1f1f2e;
+  color: #475569;
+}
+
+/* ====================================
+   PREDICTION PANEL
+==================================== */
+
+.prediction-panel {
+  background: #0f2040;
+  border: 1px solid #166534;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-top: 1rem;
+}
+
+.prediction-panel h3 {
+  font-size: 1rem;
+  color: #4ade80;
+  margin-bottom: 1rem;
+}
+
+.outcome-btns {
   display: flex;
   gap: 0.5rem;
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  flex-direction: column;
 }
 
-#add-todo-form label {
-  font-size: 0.9rem;
-  color: #374151;
-  display: none;
-}
-
-#add-todo-form input {
+.outcome-btn {
   flex: 1;
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  margin-bottom: 0;
-}
-
-#add-todo-form button {
-  background: #1d4ed8;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  background: #0a1628;
+  border: 1px solid #1e3a5f;
+  color: #94a3b8;
+  padding: 0.65rem;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.15s;
 }
 
-/* Todo list */
-#todo-list {
+.outcome-btn:hover,
+.outcome-btn.selected {
+  background: #166534;
+  border-color: #166534;
+  color: #4ade80;
+}
+
+/* ====================================
+   PREDICTION LIST
+==================================== */
+
+#prediction-list {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.todo-item {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
+.prediction-item {
+  background: #0f2040;
+  border: 1px solid #1e3a5f;
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
-.todo-item input[type='checkbox'] {
-  width: 1rem;
-  height: 1rem;
+.match-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #f0f4f8;
+}
+
+.pick-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.25rem;
+}
+
+.pick-label span {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.points-badge {
+  background: #14532d;
+  color: #4ade80;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ====================================
+   LEAGUES
+==================================== */
+
+.league-card {
+  background: #0f2040;
+  border: 1px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   cursor: pointer;
-  flex-shrink: 0;
+  transition: border-color 0.15s;
 }
 
-.todo-item span {
+.league-card:hover {
+  border-color: #2d5a8e;
+}
+
+.league-card.active-league {
+  border-color: #4ade80;
+  background: #0a2518;
+}
+
+.league-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #f0f4f8;
+}
+
+.league-code {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+}
+
+/* ====================================
+   FORMS
+==================================== */
+
+.form-card {
+  background: #0f2040;
+  border: 1px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.form-card input,
+.form-card select {
+  width: 100%;
+  background: #0a1628;
+  border: 1px solid #1e3a5f;
+  color: #f0f4f8;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 0.6rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-card input::placeholder {
+  color: #475569;
+}
+
+.form-card input:focus,
+.form-card select:focus {
+  border-color: #4ade80;
+}
+
+.form-card select option {
+  background: #0f2040;
+}
+
+/* ====================================
+   LEADERBOARD
+==================================== */
+
+.leaderboard-wrap {
+  background: #0f2040;
+  border: 1px solid #1e3a5f;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #1e3a5f;
+}
+
+.leaderboard-table td {
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid #0a1628;
+  font-size: 0.9rem;
+  color: #f0f4f8;
+}
+
+.leaderboard-table tr:last-child td {
+  border-bottom: none;
+}
+
+.leaderboard-table tr:first-child td {
+  color: #4ade80;
+  font-weight: 700;
+}
+
+/* ====================================
+   AUTH PAGE
+==================================== */
+
+.auth-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+#auth-section {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 680px;
+  flex-wrap: wrap;
+}
+
+.auth-card {
+  background: #0f2040;
+  border: 1px solid #1e3a5f;
+  border-radius: 16px;
+  padding: 2rem;
   flex: 1;
+  min-width: 280px;
+}
+
+.auth-card h1 {
+  font-size: 1.5rem;
+  color: #4ade80;
+  margin-bottom: 0.25rem;
+}
+
+.auth-card h2 {
+  font-size: 1rem;
+  color: #94a3b8;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+}
+
+.auth-card input {
+  display: block;
+  width: 100%;
+  background: #0a1628;
+  border: 1px solid #1e3a5f;
+  color: #f0f4f8;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 0.6rem;
+  outline: none;
+}
+
+.auth-card input:focus {
+  border-color: #4ade80;
+}
+
+.auth-card button[type='submit'] {
+  width: 100%;
+  background: #4ade80;
+  color: #0a1628;
+  border: none;
+  padding: 0.65rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+/* ====================================
+   EMPTY STATES
+==================================== */
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #475569;
   font-size: 0.95rem;
 }
 
-.todo-item span.completed {
-  text-decoration: line-through;
-  color: #9ca3af;
+.empty-state p {
+  margin-top: 0.5rem;
 }
 
-.delete-btn {
-  background: #dc2626;
-  color: white;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  cursor: pointer;
+/* ====================================
+   ERROR
+==================================== */
+
+.error {
+  color: #e24b4a;
   font-size: 0.85rem;
-  flex-shrink: 0;
+  background: #1f0f0f;
+  border: 1px solid #7f1d1d;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
 }
 
-@media (min-width: 480px) {
-  #add-todo-form {
-    flex-direction: row;
-    align-items: flex-end;
+/* ====================================
+   RESPONSIVE
+==================================== */
+
+@media (max-width: 600px) {
+  nav button {
+    font-size: 0.78rem;
+    padding: 0.5rem 0.4rem;
   }
+
+  .fixture-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .outcome-btns {
+    flex-direction: column;
+  }
+
+  #auth-section {
+    flex-direction: column;
+  }
+}
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* center user name perfectly */
+.header-center {
+  padding: 0.3rem 0.8rem;
+  background: #0f2040;
+  border: 1px solid #1e3a5f;
+  border-radius: 20px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* 👈 this creates space between items */
+}
+
+/* =========================
+   LEAGUE DROPDOWN (FIXED)
+========================= */
+
+.league-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* MAIN BUTTON */
+.active-league-btn {
+  background: linear-gradient(135deg, #14532d, #166534);
+  color: #4ade80;
+  border: 1px solid #166534;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+/* hover glow effect */
+.active-league-btn:hover {
+  background: #166534;
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.25);
+  transform: translateY(-1px);
+}
+
+/* MENU (hidden by default) */
+.league-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  min-width: 160px;
+
+  background: #0f2040;
+  border: 1px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 0.4rem;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: all 0.2s ease;
+
+  z-index: 1000;
+}
+
+/* SHOW MENU when hovering dropdown container */
+.league-dropdown:hover .league-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* MENU BUTTONS */
+.league-dropdown-menu button {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 0.55rem 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.85rem;
+  transition: all 0.15s ease;
+}
+
+/* hover effect */
+.league-dropdown-menu button:hover {
+  background: #1e3a5f;
+  color: #e24b4a;
+}
+
+/* optional stronger danger emphasis */
+.league-dropdown-menu button:last-child:hover {
+  background: #2a1212;
+  color: #ff4d4d;
 }

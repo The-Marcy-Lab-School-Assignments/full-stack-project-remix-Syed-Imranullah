@@ -16,8 +16,12 @@ const handleFetch = async (url, options = {}) => {
 // in MatchDay this would become:
 // fetch all predictions OR fixtures for the logged-in user
 
-export const fetchAllPredictions = async () => {
-  return handleFetch("/api/predictions");
+export const fetchAllPredictions = async (league_id) => {
+  const url = league_id
+    ? `/api/predictions?league_id=${league_id}`
+    : "/api/predictions";
+
+  return handleFetch(url);
 };
 
 // in MatchDay this becomes submitting a match prediction
