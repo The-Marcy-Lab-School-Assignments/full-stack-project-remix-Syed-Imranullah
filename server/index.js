@@ -58,7 +58,10 @@ app.patch('/api/auth/username', checkAuthentication, authControllers.updateUsern
 app.patch('/api/auth/password', checkAuthentication, authControllers.updatePassword);
 app.delete('/api/auth/account', checkAuthentication, authControllers.deleteAccount);
 
-
+// Catch-all: serve React app for any non-API route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+});
 // ====================================
 // Global Error Handler
 // ====================================
