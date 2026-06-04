@@ -34,6 +34,7 @@ function FixturesPage({ currentUser, handleLogout, activeLeague }) {
       {error && <p className="error">{error}</p>}
 
       {/* PREDICTION PANEL AT TOP */}
+      
       {selectedFixture && (
         <div className="prediction-panel">
           <h3>
