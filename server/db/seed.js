@@ -49,7 +49,7 @@ const seed = async () => {
   )
   `);
   // real soccer fixtures from API-Football
-  await pool.query(`
+await pool.query(`
   CREATE TABLE fixtures (
     fixture_id SERIAL PRIMARY KEY,
     api_fixture_id INT UNIQUE NOT NULL,
@@ -58,6 +58,7 @@ const seed = async () => {
     match_date TIMESTAMP NOT NULL,
     home_score INT,
     away_score INT,
+    winner TEXT,
     status TEXT DEFAULT 'upcoming'
   )
 `);
