@@ -1,57 +1,65 @@
-import {
-  updatePrediction,
-  deletePrediction,
-} from "../adapters/prediction-adapters";
+import { deletePrediction } from "../adapters/prediction-adapters";
+
+const formatDate = (dateStr) =>
+  new Date(dateStr).toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
 
 function PredictionItem({ prediction, loadPredictions }) {
-  // in MatchDay this would update a user's prediction
-  // (example: change Win/Draw/Loss or score guess)
-  // (expand later for editing predictions)
-  const handleUpdate = async () => {
-    const { error } = await updatePrediction(prediction.prediction_id, {
-      prediction: prediction.prediction,
-    });
-    if (error) return console.error(error);
-    loadPredictions();
-  };
-  // in MatchDay this would delete a prediction entry
+  const isLocked = new Date(prediction.match_date) < new Date();
+  const resultStatus = !isLocked
+    ? "pending"
+    : prediction.points === 3
+    ? "correct"
+    : "wrong";
+
+  const pickLabel =
+    {
+      home: `${prediction.home_team} Win`,
+      away: `${prediction.away_team} Win`,
+      draw: "Draw",
+    }[prediction.prediction] || prediction.prediction;
 
   const handleDelete = async () => {
+    const confirmed = window.confirm(
+      `Delete your prediction for ${prediction.home_team} vs ${prediction.away_team}?`
+    );
+    if (!confirmed) return;
     const { error } = await deletePrediction(prediction.prediction_id);
     if (error) return console.error(error);
     loadPredictions();
   };
 
-  const isLocked = new Date(prediction.match_date) < new Date();
-
-  // this would delete a job application
   return (
-    <li className="prediction-item">
-      {/* MatchDay display (temporary structure) */}
-      <div className="match-label">
-        <strong>
-          {prediction.home_team} VS {prediction.away_team}
-        </strong>
-      </div>
-      {/* user prediction */}
-      <div className="pick-label">
-        <strong>Your Pick:</strong> <span>{prediction.prediction}</span>
-      </div>
-      {/* points */}
-      <div className="points-badge">
-        Points: {prediction.points ?? 0}
-      </div>
-      {/* status */}
-      <div>
-        <strong>Status:</strong> {isLocked ? "Locked" : "Open"}
+    <li className={`prediction-item prediction-${resultStatus}`}>
+      <div className="pi-header">
+        <span className="pi-teams">
+          {prediction.home_team} <span className="pi-vs">vs</span> {prediction.away_team}
+        </span>
+        <span className="pi-date">{formatDate(prediction.match_date)}</span>
       </div>
 
-      {/* optional future feature: edit prediction */}
-      {!isLocked && (
-        <button className="delete-btn" onClick={handleDelete}>
-          Delete
-        </button>
-      )}
+      <div className="pi-pick">
+        Your pick: <strong>{pickLabel}</strong>
+      </div>
+
+      <div className="pi-footer">
+        <span className={`pi-status pi-status-${resultStatus}`}>
+          {resultStatus === "correct"
+            ? "✓ Correct"
+            : resultStatus === "wrong"
+            ? "✗ Wrong"
+            : "⏳ Pending"}
+        </span>
+        <span className="points-badge">{prediction.points ?? 0} pts</span>
+        {!isLocked && (
+          <button className="delete-btn" onClick={handleDelete}>
+            Delete
+          </button>
+        )}
+      </div>
     </li>
   );
 }

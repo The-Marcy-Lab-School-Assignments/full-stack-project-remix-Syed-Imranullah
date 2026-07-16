@@ -97,10 +97,10 @@ function App() {
 
       {/* NAV */}
       <nav>
-        <button onClick={() => setPage("fixtures")}>Fixtures</button>
-        <button onClick={() => setPage("leagues")}>Leagues</button>
-        <button onClick={() => setPage("leaderboard")}>Leaderboard</button>
-        <button onClick={() => setPage("predictions")}>My Predictions</button>
+        <button className={page === "fixtures" ? "active" : ""} onClick={() => setPage("fixtures")}>Fixtures</button>
+        <button className={page === "leagues" ? "active" : ""} onClick={() => setPage("leagues")}>Leagues</button>
+        <button className={page === "leaderboard" ? "active" : ""} onClick={() => setPage("leaderboard")}>Leaderboard</button>
+        <button className={page === "predictions" ? "active" : ""} onClick={() => setPage("predictions")}>My Predictions</button>
       </nav>
 
       {/* PAGES */}
@@ -130,7 +130,7 @@ function App() {
           activeLeague={activeLeague}
         />
       )}
-      {page === "leaderboard" && <Leaderboard activeLeague={activeLeague} />}
+      {page === "leaderboard" && <Leaderboard activeLeague={activeLeague} currentUser={currentUser} />}
       
       {page === "settings" && (
   <SettingsPage

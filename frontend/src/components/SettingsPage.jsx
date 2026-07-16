@@ -210,7 +210,7 @@ function SettingsPage({ currentUser, setCurrentUser, handleLogout }) {
       e.target.style.transform = "scale(1.03)";
     }}
     onMouseOut={(e) => {
-      e.target.style.background = "#334155";
+      e.target.style.background = "#475569";
       e.target.style.transform = "scale(1)";
     }}
   >

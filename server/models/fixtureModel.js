@@ -5,7 +5,7 @@ module.exports.getAll = async () => {
   const { rows } = await pool.query(`
     SELECT *
     FROM fixtures
-    WHERE match_date >= NOW() 
+    WHERE match_date >= NOW() OR status = 'live'
     ORDER BY match_date ASC
     LIMIT 50
   `);

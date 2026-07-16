@@ -1,7 +1,10 @@
 const handleFetch = async (url, options = {}) => {
   try {
     const response = await fetch(url, options);
-    if (!response.ok) throw new Error(`Fetch failed. ${response.status} ${response.statusText}`);
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new Error(body.error || `Request failed (${response.status})`);
+    }
     const data = await response.json();
     return { data, error: null };
   } catch (error) {

@@ -44,10 +44,10 @@ module.exports.findByInviteCode = async (invite_code) => {
 // get user leagues
 module.exports.getUserLeagues = async (user_id) => {
   const query = `
-    SELECT DISTINCT leagues.*
+    SELECT DISTINCT leagues.*,
+      (SELECT COUNT(*) FROM league_members lm WHERE lm.league_id = leagues.league_id) AS member_count
     FROM leagues
-    JOIN league_members
-      ON leagues.league_id = league_members.league_id
+    JOIN league_members ON leagues.league_id = league_members.league_id
     WHERE league_members.user_id = $1
   `;
   const { rows } = await pool.query(query, [user_id]);
